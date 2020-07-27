@@ -10,10 +10,11 @@
       height: 100px;
     }
     .zg-active {
-      border: 5px solid rgb(55, 255, 0);
+      
     }
     .zg-frame {
       background: rgb(165, 165, 255);
+      border: 2px solid black;
       width: 100px;
       height: 100px;
 
@@ -22,40 +23,46 @@
         display: flex;
         flex-direction: row;
         .zg-top-left-score {
-          background: cyan;
+          // background: cyan;
           height: 50px;
           width: 50px;
         }
 
         .zg-top-right-score {
-          background: darkorchid;
+          border-left: 2px solid black;
+          border-bottom: 2px solid black;
+          // background: darkorchid;
           height: 50px;
           width: 50px;
         }
         .zg-frame-last {
           display: flex;
           .zg-last-top-right-score {
+            border-left: 2px solid black;
+            border-bottom: 2px solid black;
             width: 25px;
-            background: blue;
+            // background: blue;
           }
           .zg-final-score {
+            border-left: 2px solid black;
+            border-bottom: 2px solid black;
             width: 25px;
-            background: gold;
+            // background: gold;
           }
         }
 
       }
 
       .zg-bottom-score {
-        border: 2px solid brown;
-        background: gold;
+        // background: gold;
         height: 50px;
         width: 100px;
       }
     }
 
     .zg-total-score {
-      background: rgb(237, 110, 136);
+      background: rgb(98, 98, 255);
+      border: 2px solid black;
       width: 100px;
       height: 100px;
     }

@@ -160,19 +160,19 @@ class App extends Component {
           }
         >
           <div className="zg-top-scores">
-            <div className="zg-top-left-score">{frame.topLeftScore}</div>
+            <div className="zg-top-left-score"><br/>{frame.topLeftScore}</div>
             {frame.id !== 10 ? (
-              <div className="zg-top-right-score">{frame.topRightScore}</div>
+              <div className="zg-top-right-score"><br/>{frame.topRightScore}</div>
             ) : (
               <div className="zg-frame-last">
                 <div className="zg-last-top-right-score">
                   {frame.topRightScore}
                 </div>
-                <div className="zg-final-score">{frame.finalScore}</div>
+                <div className="zg-final-score"><br/>{frame.finalScore}</div>
               </div>
             )}
           </div>
-          <div className="zg-bottom-score">{frame.bottomScore}</div>
+          <div className="zg-bottom-score"><br/>{frame.bottomScore}</div>
         </div>
       );
     });
