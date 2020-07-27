@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import "./App.scss";
 import frames from "./tools/emptyFrames";
-import calculateTotalScore from './tools/calculateTotalScore';
+import calculateTotalScore from "./tools/calculateTotalScore";
+import handleStrikesAndSpares from "./tools/handleStrikesAndSpares";
+import updatePreviousTotal from "./tools/updatePreviousTotal";
 
 class App extends Component {
   constructor() {
@@ -11,35 +13,42 @@ class App extends Component {
         playerName: "",
         playerCreated: false,
       },
-      frames: frames,
+      frames: frames(),
       turnInFrame: 1,
       pinsDown: null,
       frameNumber: 1,
+      previousFrameTotal: 0,
     };
   }
 
   startNextFrame = () => {
-    console.log(this.state.frameNumber++);
-    this.setState({ frameNumber: this.state.frameNumber++ });
+    let newFrameNumber = this.state.frameNumber;
+    newFrameNumber++;
+    this.setState({ frameNumber: newFrameNumber });
   };
 
   bowl = () => {
-
-    let pinsDown = this.state.pinsDown;
+    let pinsDown = +this.state.pinsDown;
     let frameNumber = this.state.frameNumber;
-
-    
-
+    let previousFrameTotal = this.state.previousFrameTotal;
     let currentFrames = this.state.frames.slice();
+
+    handleStrikesAndSpares(pinsDown, frameNumber, currentFrames);
+    
+    previousFrameTotal = updatePreviousTotal(currentFrames, frameNumber);
+
     let frameToUpdate = currentFrames.filter(
       (frame) => frame.id === this.state.frameNumber
     );
+
     let newFrame = frameToUpdate[0];
     //first turn
     if (this.state.turnInFrame === 1) {
       //check for strike
-      if (pinsDown == 10) {
+      if (pinsDown === 10) {
         newFrame.topRightScore = "X";
+        newFrame.owedTurns = 2;
+        newFrame.extraPoints = 10;
         this.startNextFrame();
       } else {
         //or add pins down from first turn of frame
@@ -54,15 +63,21 @@ class App extends Component {
       if (frameResult === 10) {
         newFrame.topRightScore = "/";
         newFrame.extraPoints = 10;
-        newFrame.spare = true;
+        newFrame.owedTurns = 1;
+        this.startNextFrame();
       } else {
         newFrame.topRightScore = pinsDown;
-        newFrame.bottomScore = frameResult;
+        let newBottomScore = frameResult + previousFrameTotal;
+        // console.log("previous frame total", previousFrameTotal);
+        this.setState({
+          previousFrameTotal: newBottomScore,
+        });
+
+        newFrame.bottomScore = newBottomScore;
       }
 
       //close out frame
       this.startNextFrame();
-      console.log("frame number", this.state.frameNumber);
       this.setState({ turnInFrame: 1 });
     }
     currentFrames.splice(newFrame.id - 1, 1, newFrame);
@@ -72,7 +87,6 @@ class App extends Component {
   };
 
   render() {
-
     const totalScore = calculateTotalScore(this.state.frames);
 
     const frames = this.state.frames.map((frame) => {
@@ -107,7 +121,9 @@ class App extends Component {
         <div className="zg-player-card">
           <div className="zg-player-name">name</div>
           {frames}
-          <div className="zg-total-score">total score: <br/> {totalScore}</div>
+          <div className="zg-total-score">
+            total score: <br /> {totalScore}
+          </div>
         </div>
       </div>
     );
