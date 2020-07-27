@@ -140,7 +140,7 @@ class App extends Component {
         newFrame.finalScore = pinsDown;
       }
     }
-    if (frameNumber === 10 && newFrame.bottomScore) {
+    if (frameNumber === 10 && newFrame.bottomScore !== null) {
       this.setState({ gameOver: true });
     }
     currentFrames.splice(newFrame.id - 1, 1, newFrame);
@@ -180,7 +180,6 @@ class App extends Component {
                 <div className="zg-final-score">
                   <br />
                   <div>{frame.finalScore}</div>
-                  
                 </div>
               </Card>
             )}
@@ -195,7 +194,17 @@ class App extends Component {
 
     return (
       <div className="zg-app">
-        <Card style={{height: "50px", margin: "20px", paddingBottom: "20px", fontSize: "50px", color: "rgb(40, 40, 113)"}}>Let's Bowl!</Card>
+        <Card
+          style={{
+            height: "50px",
+            margin: "20px",
+            paddingBottom: "20px",
+            fontSize: "50px",
+            color: "rgb(40, 40, 113)",
+          }}
+        >
+          Let's Bowl!
+        </Card>
         <div>
           <ol>
             <Button
@@ -306,10 +315,10 @@ class App extends Component {
         </Button>
         <br />
         {this.state.gameOver ? (
-          <Card style={{fontSize: "30px", color: "rgb(40, 40, 113)"}}>
+          <Card style={{ fontSize: "30px", color: "rgb(40, 40, 113)" }}>
             <br />
             Final Score:
-            <br /> 
+            <br />
             {totalScore}
           </Card>
         ) : (
