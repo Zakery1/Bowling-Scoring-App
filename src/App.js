@@ -1,6 +1,10 @@
 import React, { Component } from "react";
+
+//styles
 import "./App.scss";
-import frames from "./tools/emptyFrames";
+
+//helpers
+import frames from "./tools/frames";
 import calculateTotalScore from "./tools/calculateTotalScore";
 import handleStrikesAndSpares from "./tools/handleStrikesAndSpares";
 import updatePreviousTotal from "./tools/updatePreviousTotal";
@@ -9,17 +13,20 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      playerCard: {
-        playerName: "",
-        playerCreated: false,
-      },
       frames: frames(),
       turnInFrame: 1,
       pinsDown: null,
       frameNumber: 1,
       previousFrameTotal: 0,
       finalFramePoints: 0,
+      gameOver: false,
     };
+  }
+
+  endGame = () => {
+    this.setState({
+      gameOver: true
+    })
   }
 
   startNextFrame = () => {
@@ -28,8 +35,9 @@ class App extends Component {
     this.setState({ frameNumber: newFrameNumber });
   };
 
-  bowl = () => {
-    let pinsDown = +this.state.pinsDown;
+  bowl = (pins) => {
+    let pinsDown = +pins;
+    // this.setState({pinsDown: null})
     let frameNumber = this.state.frameNumber;
     let previousFrameTotal = this.state.previousFrameTotal;
     let currentFrames = this.state.frames.slice();
@@ -78,6 +86,7 @@ class App extends Component {
           return;
         } else {
           //bonus bowl
+
           newFrame.topRightScore = pinsDown;
           this.setState({
             finalFramePoints: pinsDown,
@@ -94,9 +103,8 @@ class App extends Component {
         newFrame.owedTurns = 1;
 
         this.setState({
-          turnInFrame: 3
+          turnInFrame: 3,
         });
-
       } else {
         newFrame.topRightScore = pinsDown;
 
@@ -115,13 +123,12 @@ class App extends Component {
       }
 
       //close out frame
-      if(this.state.frameNumber === 10){
+      if (this.state.frameNumber === 10) {
         this.setState({ turnInFrame: 3 });
       } else {
         this.setState({ turnInFrame: 1 });
         this.startNextFrame();
       }
-
     } else {
       if (pinsDown === 10) {
         newFrame.finalScore = "X";
@@ -129,10 +136,14 @@ class App extends Component {
         newFrame.finalScore = pinsDown;
       }
     }
+    if(frameNumber === 10 && newFrame.bottomScore) {
+      this.setState({gameOver: true})
+    }
     currentFrames.splice(newFrame.id - 1, 1, newFrame);
     this.setState({
       frames: currentFrames,
     });
+
   };
 
   render() {
@@ -170,19 +181,28 @@ class App extends Component {
       <div className="zg-app">
         <div>bowling game</div>
         <div>
-          <input
-            type="number"
-            onChange={(e) => this.setState({ pinsDown: e.target.value })}
-          />
+          <ol>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(0)}>0</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(1)}>1</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(2)}>2</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(3)}>3</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(4)}>4</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(5)}>5</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(6)}>6</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(7)}>7</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(8)}>8</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(9)}>9</button>
+            <button disabled={this.state.gameOver} onClick={() => this.bowl(10)}>10</button>
+          </ol>
         </div>
-        <button onClick={() => this.bowl()}>Bowl!</button>
         <div className="zg-player-card">
-          <div className="zg-player-name">name</div>
           {frames}
           <div className="zg-total-score">
             total score: <br /> {totalScore}
           </div>
         </div>
+        <button disabled={this.state.gameOver} onClick={() => this.endGame()}>END GAME</button>
+       {this.state.gameOver?<div>finalScore: {totalScore}</div>: ""} 
       </div>
     );
   }
