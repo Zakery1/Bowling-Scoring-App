@@ -18,6 +18,7 @@ class App extends Component {
       pinsDown: null,
       frameNumber: 1,
       previousFrameTotal: 0,
+      finalFramePoints: 0,
     };
   }
 
@@ -34,7 +35,7 @@ class App extends Component {
     let currentFrames = this.state.frames.slice();
 
     handleStrikesAndSpares(pinsDown, frameNumber, currentFrames);
-    
+
     previousFrameTotal = updatePreviousTotal(currentFrames, frameNumber);
 
     let frameToUpdate = currentFrames.filter(
@@ -46,17 +47,41 @@ class App extends Component {
     if (this.state.turnInFrame === 1) {
       //check for strike
       if (pinsDown === 10) {
-        newFrame.topRightScore = "X";
-        newFrame.owedTurns = 2;
-        newFrame.extraPoints = 10;
-        this.startNextFrame();
+        if (newFrame.id === 10) {
+          newFrame.topLeftScore = "X";
+          this.setState({
+            finalFramePoints: 10,
+            turnInFrame: 2,
+          });
+          // console.log("hello");
+          // this.startNextFrame();
+          newFrame.owedTurns = 2;
+          newFrame.extraPoints = 10;
+        } else {
+          newFrame.topRightScore = "X";
+          newFrame.owedTurns = 2;
+          newFrame.extraPoints = 10;
+          this.startNextFrame();
+        }
       } else {
         //or add pins down from first turn of frame
         newFrame.topLeftScore = +pinsDown;
         this.setState({ turnInFrame: 2 });
       }
-    } else {
+    } else if (this.state.turnInFrame === 2) {
       //second turn
+      if (newFrame.id === 10) {
+        if (pinsDown === 10) {
+          newFrame.topRightScore = "X";
+          this.setState({
+            finalFramePoints: 10,
+            turnInFrame: 3,
+          });
+          return;
+        } else {
+          newFrame.topRightScore = pinsDown;
+        }
+      }
       let firstTurnPins = newFrame.topLeftScore;
       let frameResult = +pinsDown + +firstTurnPins;
       //check for spare
@@ -67,18 +92,29 @@ class App extends Component {
         this.startNextFrame();
       } else {
         newFrame.topRightScore = pinsDown;
-        let newBottomScore = frameResult + previousFrameTotal;
+
+        let newBottomScore = 0;
+        if (newFrame.id !== 1) {
+          newBottomScore = frameResult + previousFrameTotal;
+        } else {
+          newBottomScore = frameResult;
+        }
+
         // console.log("previous frame total", previousFrameTotal);
         this.setState({
           previousFrameTotal: newBottomScore,
         });
 
-        newFrame.bottomScore = newBottomScore;
+        newFrame.bottomScore = +newBottomScore;
       }
 
       //close out frame
       this.startNextFrame();
       this.setState({ turnInFrame: 1 });
+    } else {
+      if (pinsDown === 10) {
+        newFrame.finalScore = "X";
+      }
     }
     currentFrames.splice(newFrame.id - 1, 1, newFrame);
     this.setState({
@@ -101,7 +137,16 @@ class App extends Component {
         >
           <div className="zg-top-scores">
             <div className="zg-top-left-score">{frame.topLeftScore}</div>
-            <div className="zg-top-right-score">{frame.topRightScore}</div>
+            {frame.id !== 10 ? (
+              <div className="zg-top-right-score">{frame.topRightScore}</div>
+            ) : (
+              <div className="zg-frame-last">
+                <div className="zg-last-top-right-score">
+                  {frame.topRightScore}
+                </div>
+                <div className="zg-final-score">{frame.finalScore}</div>
+              </div>
+            )}
           </div>
           <div className="zg-bottom-score">{frame.bottomScore}</div>
         </div>

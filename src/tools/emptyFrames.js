@@ -6,6 +6,7 @@ const emptyFrames = () => {
       topLeftScore: null,
       topRightScore: null,
       bottomScore: null,
+      finalScore: null,
       extraPoints: 0,
       owedTurns: 0,
     };

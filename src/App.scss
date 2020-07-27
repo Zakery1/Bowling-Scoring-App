@@ -32,6 +32,18 @@
           height: 50px;
           width: 50px;
         }
+        .zg-frame-last {
+          display: flex;
+          .zg-last-top-right-score {
+            width: 25px;
+            background: blue;
+          }
+          .zg-final-score {
+            width: 25px;
+            background: gold;
+          }
+        }
+
       }
 
       .zg-bottom-score {
