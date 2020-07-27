@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 
+//libraries
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+
 //styles
 import "./App.scss";
 
@@ -25,9 +29,9 @@ class App extends Component {
 
   endGame = () => {
     this.setState({
-      gameOver: true
-    })
-  }
+      gameOver: true,
+    });
+  };
 
   startNextFrame = () => {
     let newFrameNumber = this.state.frameNumber;
@@ -136,14 +140,13 @@ class App extends Component {
         newFrame.finalScore = pinsDown;
       }
     }
-    if(frameNumber === 10 && newFrame.bottomScore) {
-      this.setState({gameOver: true})
+    if (frameNumber === 10 && newFrame.bottomScore) {
+      this.setState({ gameOver: true });
     }
     currentFrames.splice(newFrame.id - 1, 1, newFrame);
     this.setState({
       frames: currentFrames,
     });
-
   };
 
   render() {
@@ -151,7 +154,7 @@ class App extends Component {
 
     const frames = this.state.frames.map((frame) => {
       return (
-        <div
+        <Card
           key={frame.id}
           className={
             frame.id === this.state.frameNumber
@@ -160,49 +163,158 @@ class App extends Component {
           }
         >
           <div className="zg-top-scores">
-            <div className="zg-top-left-score"><br/>{frame.topLeftScore}</div>
+            <div className="zg-top-left-score">
+              <br />
+              {frame.topLeftScore}
+            </div>
             {frame.id !== 10 ? (
-              <div className="zg-top-right-score"><br/>{frame.topRightScore}</div>
+              <div className="zg-top-right-score">
+                <br />
+                {frame.topRightScore}
+              </div>
             ) : (
-              <div className="zg-frame-last">
+              <Card className="zg-frame-last">
                 <div className="zg-last-top-right-score">
                   {frame.topRightScore}
                 </div>
-                <div className="zg-final-score"><br/>{frame.finalScore}</div>
-              </div>
+                <div className="zg-final-score">
+                  <br />
+                  <div>{frame.finalScore}</div>
+                  
+                </div>
+              </Card>
             )}
           </div>
-          <div className="zg-bottom-score"><br/>{frame.bottomScore}</div>
-        </div>
+          <div className="zg-bottom-score">
+            <br />
+            {frame.bottomScore}
+          </div>
+        </Card>
       );
     });
 
     return (
       <div className="zg-app">
-        <div>bowling game</div>
+        <Card style={{height: "50px", margin: "20px", paddingBottom: "20px", fontSize: "50px", color: "rgb(40, 40, 113)"}}>Let's Bowl!</Card>
         <div>
           <ol>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(0)}>0</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(1)}>1</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(2)}>2</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(3)}>3</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(4)}>4</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(5)}>5</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(6)}>6</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(7)}>7</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(8)}>8</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(9)}>9</button>
-            <button disabled={this.state.gameOver} onClick={() => this.bowl(10)}>10</button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(0)}
+            >
+              0
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(1)}
+            >
+              1
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(2)}
+            >
+              2
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(3)}
+            >
+              3
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(4)}
+            >
+              4
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(5)}
+            >
+              5
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(6)}
+            >
+              6
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(7)}
+            >
+              7
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(8)}
+            >
+              8
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(9)}
+            >
+              9
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={this.state.gameOver}
+              onClick={() => this.bowl(10)}
+            >
+              10
+            </Button>
           </ol>
         </div>
         <div className="zg-player-card">
           {frames}
-          <div className="zg-total-score">
-            total score: <br /> {totalScore}
-          </div>
+          <Card className="zg-total-score">
+            Total Score: <br /> <br />
+            {totalScore}
+          </Card>
         </div>
-        <button disabled={this.state.gameOver} onClick={() => this.endGame()}>END GAME</button>
-       {this.state.gameOver?<div>finalScore: {totalScore}</div>: ""} 
+        <br />
+        <Button
+          variant="outlined"
+          color="primary"
+          disabled={this.state.gameOver}
+          onClick={() => this.endGame()}
+        >
+          END GAME
+        </Button>
+        <br />
+        {this.state.gameOver ? (
+          <Card style={{fontSize: "30px", color: "rgb(40, 40, 113)"}}>
+            <br />
+            Final Score:
+            <br /> 
+            {totalScore}
+          </Card>
+        ) : (
+          ""
+        )}
       </div>
     );
   }

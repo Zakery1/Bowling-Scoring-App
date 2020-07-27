@@ -1,5 +1,6 @@
 .zg-app {
   text-align: center;
+  font-weight: bold;
 
   .zg-player-card {
     display: flex;
@@ -14,7 +15,7 @@
     }
     .zg-frame {
       background: rgb(165, 165, 255);
-      border: 2px solid black;
+      border: 2px solid rgb(40, 40, 113);
       width: 100px;
       height: 100px;
 
@@ -23,46 +24,44 @@
         display: flex;
         flex-direction: row;
         .zg-top-left-score {
-          // background: cyan;
           height: 50px;
           width: 50px;
         }
 
         .zg-top-right-score {
-          border-left: 2px solid black;
-          border-bottom: 2px solid black;
-          // background: darkorchid;
+          border-left: 2px solid rgb(40, 40, 113);
+          border-bottom: 2px solid rgb(40, 40, 113);
           height: 50px;
           width: 50px;
         }
         .zg-frame-last {
           display: flex;
           .zg-last-top-right-score {
-            border-left: 2px solid black;
-            border-bottom: 2px solid black;
+            padding-top: 18px;
+            background: rgb(165, 165, 255);
+            border-left: 2px solid rgb(40, 40, 113);
+            border-bottom: 2px solid rgb(40, 40, 113);
             width: 25px;
-            // background: blue;
           }
           .zg-final-score {
-            border-left: 2px solid black;
-            border-bottom: 2px solid black;
+            border-left: 2px solid rgb(40, 40, 113);
+            background: rgb(165, 165, 255);
+            border-bottom: 2px solid rgb(40, 40, 113);
             width: 25px;
-            // background: gold;
           }
         }
 
       }
 
       .zg-bottom-score {
-        // background: gold;
         height: 50px;
         width: 100px;
       }
     }
 
     .zg-total-score {
-      background: rgb(98, 98, 255);
-      border: 2px solid black;
+      background: rgb(165, 165, 255);
+      border: 2px solid rgb(40, 40, 113);
       width: 100px;
       height: 100px;
     }
