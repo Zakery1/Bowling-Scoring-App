@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.scss";
+import frames from "./tools/emptyFrames";
+import calculateTotalScore from './tools/calculateTotalScore';
 
 class App extends Component {
   constructor() {
@@ -10,119 +11,103 @@ class App extends Component {
         playerName: "",
         playerCreated: false,
       },
-      frames: Array(10).fill({ topRightScore: null, topLeftScore: null, bottomScore: null }),
+      frames: frames,
+      turnInFrame: 1,
+      pinsDown: null,
+      frameNumber: 1,
     };
   }
 
-  // handleClick(i) {
-  //   const history = this.state.history.slice(0, this.state.stepNumber+1)
-  //   const current = history[history.length - 1];
-  //   const squares = current.squares.slice();
-  //   if (calculateWinner(squares) || squares[i]) {
-  //     return;
-  //   }
-  //   squares[i] = this.state.xIsNext ? 'X' : 'O';
-  //   this.setState({
-  //     history: history.concat([{
-  //       squares: squares
-  //     }]),
-  //     xIsNext: !this.state.xIsNext,
-  //     stepNumber: history.length,
-  //   });
-  // }
+  startNextFrame = () => {
+    console.log(this.state.frameNumber++);
+    this.setState({ frameNumber: this.state.frameNumber++ });
+  };
 
-  addToState = () => {
-    const currentFrames = this.state.frames.slice();
+  bowl = () => {
+
+    let pinsDown = this.state.pinsDown;
+    let frameNumber = this.state.frameNumber;
+
+    
+
+    let currentFrames = this.state.frames.slice();
+    let frameToUpdate = currentFrames.filter(
+      (frame) => frame.id === this.state.frameNumber
+    );
+    let newFrame = frameToUpdate[0];
+    //first turn
+    if (this.state.turnInFrame === 1) {
+      //check for strike
+      if (pinsDown == 10) {
+        newFrame.topRightScore = "X";
+        this.startNextFrame();
+      } else {
+        //or add pins down from first turn of frame
+        newFrame.topLeftScore = +pinsDown;
+        this.setState({ turnInFrame: 2 });
+      }
+    } else {
+      //second turn
+      let firstTurnPins = newFrame.topLeftScore;
+      let frameResult = +pinsDown + +firstTurnPins;
+      //check for spare
+      if (frameResult === 10) {
+        newFrame.topRightScore = "/";
+        newFrame.extraPoints = 10;
+        newFrame.spare = true;
+      } else {
+        newFrame.topRightScore = pinsDown;
+        newFrame.bottomScore = frameResult;
+      }
+
+      //close out frame
+      this.startNextFrame();
+      console.log("frame number", this.state.frameNumber);
+      this.setState({ turnInFrame: 1 });
+    }
+    currentFrames.splice(newFrame.id - 1, 1, newFrame);
     this.setState({
-      frames: currentFrames.concat([
-        {
-          topRightScore: 2,
-          topLeftScore: 3,
-          bottomScore: 1
-        },
-      ]),
+      frames: currentFrames,
     });
   };
 
   render() {
-    const frames = this.state.frames.map((x) => {
-      return <div>{x.topRightScore}</div>;
+
+    const totalScore = calculateTotalScore(this.state.frames);
+
+    const frames = this.state.frames.map((frame) => {
+      return (
+        <div
+          key={frame.id}
+          className={
+            frame.id === this.state.frameNumber
+              ? "zg-frame zg-active"
+              : "zg-frame"
+          }
+        >
+          <div className="zg-top-scores">
+            <div className="zg-top-left-score">{frame.topLeftScore}</div>
+            <div className="zg-top-right-score">{frame.topRightScore}</div>
+          </div>
+          <div className="zg-bottom-score">{frame.bottomScore}</div>
+        </div>
+      );
     });
 
     return (
       <div className="zg-app">
         <div>bowling game</div>
-        <button onClick={this.addToState}>add</button>
-
-        <div>frames: {frames}</div>
-
+        <div>
+          <input
+            type="number"
+            onChange={(e) => this.setState({ pinsDown: e.target.value })}
+          />
+        </div>
+        <button onClick={() => this.bowl()}>Bowl!</button>
         <div className="zg-player-card">
           <div className="zg-player-name">name</div>
-
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-frame">
-            <div className="zg-top-scores">
-              <div className="zg-top-left-score"></div>
-              <div className="zg-top-right-score"></div>
-            </div>
-            <div className="zg-bottom-score"></div>
-          </div>
-          <div className="zg-total-score">total score</div>
+          {frames}
+          <div className="zg-total-score">total score: <br/> {totalScore}</div>
         </div>
       </div>
     );
