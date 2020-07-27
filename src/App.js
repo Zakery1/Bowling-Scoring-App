@@ -53,8 +53,6 @@ class App extends Component {
             finalFramePoints: 10,
             turnInFrame: 2,
           });
-          // console.log("hello");
-          // this.startNextFrame();
           newFrame.owedTurns = 2;
           newFrame.extraPoints = 10;
         } else {
@@ -64,7 +62,7 @@ class App extends Component {
           this.startNextFrame();
         }
       } else {
-        //or add pins down from first turn of frame
+        // add pins down from first turn of frame
         newFrame.topLeftScore = +pinsDown;
         this.setState({ turnInFrame: 2 });
       }
@@ -79,7 +77,12 @@ class App extends Component {
           });
           return;
         } else {
+          //bonus bowl
           newFrame.topRightScore = pinsDown;
+          this.setState({
+            finalFramePoints: pinsDown,
+            turnInFrame: 3,
+          });
         }
       }
       let firstTurnPins = newFrame.topLeftScore;
@@ -89,7 +92,11 @@ class App extends Component {
         newFrame.topRightScore = "/";
         newFrame.extraPoints = 10;
         newFrame.owedTurns = 1;
-        this.startNextFrame();
+
+        this.setState({
+          turnInFrame: 3
+        });
+
       } else {
         newFrame.topRightScore = pinsDown;
 
@@ -100,7 +107,6 @@ class App extends Component {
           newBottomScore = frameResult;
         }
 
-        // console.log("previous frame total", previousFrameTotal);
         this.setState({
           previousFrameTotal: newBottomScore,
         });
@@ -109,11 +115,18 @@ class App extends Component {
       }
 
       //close out frame
-      this.startNextFrame();
-      this.setState({ turnInFrame: 1 });
+      if(this.state.frameNumber === 10){
+        this.setState({ turnInFrame: 3 });
+      } else {
+        this.setState({ turnInFrame: 1 });
+        this.startNextFrame();
+      }
+
     } else {
       if (pinsDown === 10) {
         newFrame.finalScore = "X";
+      } else {
+        newFrame.finalScore = pinsDown;
       }
     }
     currentFrames.splice(newFrame.id - 1, 1, newFrame);
